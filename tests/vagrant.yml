@@ -1,0 +1,7 @@
+# test for go-common
+---
+- hosts: all
+  remote_user: vagrant
+  sudo: true
+  roles:
+    - ../../
