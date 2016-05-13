@@ -29,6 +29,7 @@ before_install:
 install:
   # Install Ansible.
   - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install --no-binary ansible ansible; else pip install --no-binary ansible ansible==$ANSIBLE_VERSION; fi
+  - ansible-galaxy install java
 
 script:
   # Check the role/playbook's syntax.
