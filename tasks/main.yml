@@ -9,20 +9,23 @@
      gocd_common_java_home: "{{system_java_home.stdout}}"
 
 - name: Thoughtworks go apt repository
-  sudo: yes
+  become: yes
+  become_method: sudo
   apt_repository:
     repo: 'deb {{gocd_common_debian_repository}} /'
     state: present
 
 # Note: If the user or group exists, but under another ID, Ansible will try and change it.
 - name: Add go group
-  sudo: yes
+  become: yes
+  become_method: sudo
   group:
     name: "{{gocd_common_group}}"
     state: present
 
 - name: Add go user with home at /var/go
-  sudo: yes
+  become: yes
+  become_method: sudo
   user:
     name: "{{gocd_common_user}}"
     comment: "Go CD User"
@@ -69,7 +72,8 @@
   when: gocd_common_configure_ssh
 
 - name: Create log directory
-  sudo: yes
+  become: yes
+  become_method: sudo
   file:
     path: /var/log/go-server
     state: directory
@@ -77,13 +81,15 @@
     group: "{{gocd_common_group}}"
 
 - name: Create run directory
-  sudo: yes
+  become: yes
+  become_method: sudo
   file:
     path: /var/run/go-server
     state: directory
 
 - name: Create var/lib/go-server directory
-  sudo: yes
+  become: yes
+  become_method: sudo
   file:
     path: /var/lib/go-server
     state: directory
@@ -91,7 +97,8 @@
     group: "{{gocd_common_group}}"
 
 - name: Create etc/go directory
-  sudo: yes
+  become: yes
+  become_method: sudo
   file:
     path: /etc/go
     state: directory

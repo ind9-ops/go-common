@@ -5,4 +5,5 @@ dependencies:
     java_versions: "{{gocd_common_java_versions}}"
 
   - role: native
-    sudo: yes
+    become: yes
+    become_method: sudo
