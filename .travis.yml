@@ -15,6 +15,7 @@ env:
 branches:
   only:
     - master
+    - best-practices
 
 matrix:
   allow_failures:
