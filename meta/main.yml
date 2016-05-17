@@ -1,7 +1,6 @@
 ---
 dependencies:
-  - role: java 
-    src: https://github.com/ind9-ops/java
+  - role: colstrom.java 
     java_versions: "{{gocd_common_java_versions}}"
 
   - role: native
