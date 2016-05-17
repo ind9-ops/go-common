@@ -2,7 +2,3 @@
 dependencies:
   - role: colstrom.java 
     java_versions: "{{gocd_common_java_versions}}"
-
-  - role: native
-    become: yes
-    become_method: sudo
