@@ -1,8 +1,6 @@
 ---
 gocd_common_user: go
-gocd_common_userid: 5000
 gocd_common_group: go
-gocd_common_groupid: 5000
 gocd_common_debian_repository: https://download.go.cd
 gocd_common_configure_ssh: false
 gocd_common_ssh_known_domain: github.com
