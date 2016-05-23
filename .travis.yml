@@ -31,7 +31,8 @@ install:
   # Install Ansible.
   - if [ "$ANSIBLE_VERSION" = "latest" ]; then pip install --no-binary ansible ansible; else pip install --no-binary ansible ansible==$ANSIBLE_VERSION; fi
   - "{ echo '[defaults]'; echo 'roles_path = ../'; } >> ansible.cfg"
-  - ansible-galaxy install ind9-ops.java
+  - "{ echo '- src: https://github.com/ind9-ops/java' ; echo '  version: master' ; echo '  name: java' } >> requirement.yml
+  - ansible-galaxy install -r requirements.yml
 
 script:
   # Check the role/playbook's syntax.

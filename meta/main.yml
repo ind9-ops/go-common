@@ -1,4 +1,6 @@
 ---
 dependencies:
-  - role: ind9-ops.java 
+  - name: ind9-ops.java 
+    src: git+git@github.com:ind9-ops/java.git
+    version: master
     java_versions: "{{gocd_common_java_versions}}"
