@@ -1,0 +1,106 @@
+---
+- name: Determine JAVA_HOME
+  shell: readlink -f /usr/bin/java | sed "s:bin/java::"
+  register: system_java_home
+  changed_when: false
+
+- name: Set GOCD_COMMON_JAVA_HOME
+  set_fact:
+     gocd_common_java_home: "{{system_java_home.stdout}}"
+
+- name: Thoughtworks go apt repository
+  become: yes
+  become_method: sudo
+  apt_repository:
+    repo: 'deb {{gocd_common_debian_repository}} /'
+    state: present
+
+# Note: If the user or group exists, but under another ID, Ansible will try and change it.
+- name: Add go group
+  become: yes
+  become_method: sudo
+  group:
+    name: "{{gocd_common_group}}"
+    state: present
+
+- name: Add go user with home at /var/go
+  become: yes
+  become_method: sudo
+  user:
+    name: "{{gocd_common_user}}"
+    comment: "Go CD User"
+    group: "{{gocd_common_group}}"
+    home: /var/go
+    shell: /bin/bash
+
+- name: Gos .ssh folder
+  file:
+    path: /var/go/.ssh
+    state: directory
+    group: "{{gocd_common_group}}"
+    owner: "{{gocd_common_user}}"
+  when: gocd_common_configure_ssh
+
+- name: SSH public key
+  copy:
+    dest: /var/go/.ssh/{{GOCD_COMMON_SSH_PUBLIC_KEY | basename}}
+    src: "{{gocd_common_ssh_public_key}}"
+    group: "{{gocd_common_group}}"
+    mode: 0644
+    owner: "{{gocd_common_user}}"
+  when: gocd_common_configure_ssh
+
+- name: SSH private key
+  copy:
+    dest: /var/go/.ssh/{{gocd_common_ssh_private_key | basename}}
+    src: "{{gocd_common_ssh_private_key}}"
+    group: "{{gocd_common_group}}"
+    mode: 0600
+    owner: "{{gocd_common_user}}"
+  when: gocd_common_configure_ssh
+
+- name: Ensure git server is a known host
+  lineinfile:
+    dest: /var/go/.ssh/known_hosts
+    create: yes
+    state: present
+    line: "{{ lookup('pipe', 'ssh-keyscan -t rsa ' + gocd_common_ssh_known_domain) }}"
+    regexp: "^{{gocd_common_ssh_known_domain|replace('.', '\\.') }}"
+    group: "{{gocd_common_group}}"
+    mode: 0644
+    owner: "{{gocd_common_user}}"
+  when: gocd_common_configure_ssh
+
+- name: Create log directory
+  become: yes
+  become_method: sudo
+  file:
+    path: /var/log/go-server
+    state: directory
+    owner: "{{gocd_common_user}}"
+    group: "{{gocd_common_group}}"
+
+- name: Create run directory
+  become: yes
+  become_method: sudo
+  file:
+    path: /var/run/go-server
+    state: directory
+
+- name: Create var/lib/go-server directory
+  become: yes
+  become_method: sudo
+  file:
+    path: /var/lib/go-server
+    state: directory
+    owner: "{{gocd_common_user}}"
+    group: "{{gocd_common_group}}"
+
+- name: Create etc/go directory
+  become: yes
+  become_method: sudo
+  file:
+    path: /etc/go
+    state: directory
+    owner: "{{gocd_common_user}}"
+    group: "{{gocd_common_group}}"

@@ -1,0 +1,7 @@
+# {{ansible_managed}}
+
+[thoughtworks-go-download]
+name=Thoughtworks Go Repository
+baseurl=https://download.go.cd/
+enabled=1
+gpgcheck=0
